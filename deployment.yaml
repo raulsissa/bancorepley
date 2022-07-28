@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-banco-ripley
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-banco-ripley
+  template:
+    metadata:
+      labels:
+        app: hello-banco-ripley
+    spec:
+      containers:
+      - name: hello-banco-ripley
+        image: 371897000246.dkr.ecr.us-east-1.amazonaws.com/hello-banco-ripley:latest
+        ports:
+        - name: web
+          containerPort: 80
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 250m
+          limits:
+            memory: 256Mi
+            cpu: 250m
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: role
+                operator: In
+                values:
+                - general
+      # tolerations:
+      # - key: team
+      #   operator: Equal
+      #   value: devops
+      #   effect: NoSchedule
